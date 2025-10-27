@@ -1,6 +1,3 @@
-// =====================
-// Classe Funcionario
-// =====================
 class Funcionario {
     constructor(nome, idade, cargo, salario) {
         this.nome = nome;
@@ -9,44 +6,31 @@ class Funcionario {
         this.salario = salario;
     }
 
-    // Métodos de acesso
-    getNome() { return this.nome; }
-    setNome(nome) { this.nome = nome; }
+    getNome = () => this.nome;
+    setNome = nome => this.nome = nome;
 
-    getIdade() { return this.idade; }
-    setIdade(idade) { this.idade = idade; }
+    getIdade = () => this.idade;
+    setIdade = idade => this.idade = idade;
 
-    getCargo() { return this.cargo; }
-    setCargo(cargo) { this.cargo = cargo; }
+    getCargo = () => this.cargo;
+    setCargo = cargo => this.cargo = cargo;
 
-    getSalario() { return this.salario; }
-    setSalario(salario) { this.salario = salario; }
+    getSalario = () => this.salario;
+    setSalario = salario => this.salario = salario;
 
-    toString() {
-        return `${this.nome}, ${this.idade} anos, ${this.cargo}, R$${this.salario.toFixed(2)}`;
-    }
+    toString = () => `${this.nome}, ${this.idade} anos, ${this.cargo}, R$${this.salario.toFixed(2)}`;
 }
 
-// =====================
-// Array para armazenar funcionários
-// =====================
 const funcionarios = [];
 
-// =====================
-// Referências do DOM
-// =====================
 const form = document.getElementById('formFuncionario');
 const tabelaCorpo = document.getElementById('tabelaFuncionarios').getElementsByTagName('tbody')[0];
 const btnCadastrar = document.getElementById('btnCadastrar');
 
-// Variável para controle de edição
 let indiceEdicao = -1;
 
-// =====================
-// Função para atualizar a tabela
-// =====================
-function atualizarTabela() {
-    tabelaCorpo.innerHTML = ''; // Limpa a tabela
+const atualizarTabela = () => {
+    tabelaCorpo.innerHTML = ''; 
 
     funcionarios.forEach((func, index) => {
         const linha = tabelaCorpo.insertRow();
@@ -60,15 +44,13 @@ function atualizarTabela() {
 
         const btnEditar = document.createElement('button');
         btnEditar.textContent = 'Editar';
-        btnEditar.onclick = function() {
-
+        btnEditar.onclick = () => {
             document.getElementById('nome').value = func.getNome();
             document.getElementById('idade').value = func.getIdade();
             document.getElementById('cargo').value = func.getCargo();
             document.getElementById('salario').value = func.getSalario();
 
             indiceEdicao = index;
-
             btnCadastrar.textContent = 'Atualizar';
         };
         celulaAcoes.appendChild(btnEditar);
@@ -77,7 +59,7 @@ function atualizarTabela() {
 
         const btnExcluir = document.createElement('button');
         btnExcluir.textContent = 'Excluir';
-        btnExcluir.onclick = function() {
+        btnExcluir.onclick = () => {
             if (confirm(`Deseja realmente excluir ${func.getNome()}?`)) {
                 funcionarios.splice(index, 1);
                 atualizarTabela();
@@ -88,9 +70,9 @@ function atualizarTabela() {
         };
         celulaAcoes.appendChild(btnExcluir);
     });
-}
+};
 
-form.addEventListener('submit', function(event) {
+form.addEventListener('submit', event => {
     event.preventDefault();
 
     const nome = document.getElementById('nome').value;
@@ -115,3 +97,6 @@ form.addEventListener('submit', function(event) {
     atualizarTabela();
     form.reset();
 });
+
+const buscarFuncionarioPorNome = nome => funcionarios.find(func => func.getNome() === nome);
+
