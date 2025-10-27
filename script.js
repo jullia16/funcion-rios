@@ -1,36 +1,44 @@
-class Funcionario {
-    constructor(nome, idade, cargo, salario) {
-        this.nome = nome;
-        this.idade = idade;
-        this.cargo = cargo;
-        this.salario = salario;
-    }
 
-    getNome = () => this.nome;
-    setNome = nome => this.nome = nome;
+const gerarRelatorios = () => {
+    const salarioAlto = funcionarios
+        .filter(func => func.getSalario() > 5000)
+        .map(func => func.getNome());
 
-    getIdade = () => this.idade;
-    setIdade = idade => this.idade = idade;
+    const ulSalarioAlto = document.getElementById('salarioAlto');
+    ulSalarioAlto.innerHTML = '';
+    salarioAlto.forEach(nome => {
+        const li = document.createElement('li');
+        li.textContent = nome;
+        ulSalarioAlto.appendChild(li);
+    });
 
-    getCargo = () => this.cargo;
-    setCargo = cargo => this.cargo = cargo;
+    const media = funcionarios.length > 0 
+        ? funcionarios.reduce((acc, func) => acc + func.getSalario(), 0) / funcionarios.length
+        : 0;
 
-    getSalario = () => this.salario;
-    setSalario = salario => this.salario = salario;
+    document.getElementById('mediaSalarial').textContent = `R$ ${media.toFixed(2)}`;
 
-    toString = () => `${this.nome}, ${this.idade} anos, ${this.cargo}, R$${this.salario.toFixed(2)}`;
-}
+    const cargos = [...new Set(funcionarios.map(func => func.getCargo()))];
+    const ulCargos = document.getElementById('cargosUnicos');
+    ulCargos.innerHTML = '';
+    cargos.forEach(cargo => {
+        const li = document.createElement('li');
+        li.textContent = cargo;
+        ulCargos.appendChild(li);
+    });
 
-const funcionarios = [];
-
-const form = document.getElementById('formFuncionario');
-const tabelaCorpo = document.getElementById('tabelaFuncionarios').getElementsByTagName('tbody')[0];
-const btnCadastrar = document.getElementById('btnCadastrar');
-
-let indiceEdicao = -1;
+    const nomesUpper = funcionarios.map(func => func.getNome().toUpperCase());
+    const ulNomes = document.getElementById('nomesMaiusculo');
+    ulNomes.innerHTML = '';
+    nomesUpper.forEach(nome => {
+        const li = document.createElement('li');
+        li.textContent = nome;
+        ulNomes.appendChild(li);
+    });
+};
 
 const atualizarTabela = () => {
-    tabelaCorpo.innerHTML = ''; 
+    tabelaCorpo.innerHTML = '';
 
     funcionarios.forEach((func, index) => {
         const linha = tabelaCorpo.insertRow();
@@ -54,7 +62,6 @@ const atualizarTabela = () => {
             btnCadastrar.textContent = 'Atualizar';
         };
         celulaAcoes.appendChild(btnEditar);
-
         celulaAcoes.appendChild(document.createTextNode(' '));
 
         const btnExcluir = document.createElement('button');
@@ -70,33 +77,7 @@ const atualizarTabela = () => {
         };
         celulaAcoes.appendChild(btnExcluir);
     });
+
+    // Atualiza os relatórios
+    gerarRelatorios();
 };
-
-form.addEventListener('submit', event => {
-    event.preventDefault();
-
-    const nome = document.getElementById('nome').value;
-    const idade = parseInt(document.getElementById('idade').value);
-    const cargo = document.getElementById('cargo').value;
-    const salario = parseFloat(document.getElementById('salario').value);
-
-    if (indiceEdicao === -1) {
-        const novoFuncionario = new Funcionario(nome, idade, cargo, salario);
-        funcionarios.push(novoFuncionario);
-    } else {
-        const func = funcionarios[indiceEdicao];
-        func.setNome(nome);
-        func.setIdade(idade);
-        func.setCargo(cargo);
-        func.setSalario(salario);
-
-        indiceEdicao = -1;
-        btnCadastrar.textContent = 'Cadastrar';
-    }
-
-    atualizarTabela();
-    form.reset();
-});
-
-const buscarFuncionarioPorNome = nome => funcionarios.find(func => func.getNome() === nome);
-
